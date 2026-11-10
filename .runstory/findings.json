@@ -1,0 +1,463 @@
+{
+  "version": 1,
+  "findings": [
+    {
+      "id": "f-df5c58e9e0ac",
+      "check": "hunt.c1",
+      "oracle": "",
+      "source": "hunt",
+      "authored": "model",
+      "title": "Alt-dragging a frame to duplicate it puts the copied arrow's end somewhere that depends on how many pointer moves the drag took, when the arrow is bound to an element in another frame",
+      "severity": "medium",
+      "observed": "Setup: frame A (0,0,300x300) holds rectA, frame B holds rectB at x=600, and an arrow in frame A runs from rectA (100,150) to rectB (650,150). Alt-dragging frame A from (250,250) to (250,550) in one pointer move leaves the duplicate arrow's end at (650,150). The same drag done in two moves (y=400, then 550) leaves it at (650,300), and in three moves (300, 350, 550) at (650,400). The end is unbound each time. The end lags by the offset of the first move.",
+      "expected": "Alt-dragging frame A to the same final pointer position should give the same result however many pointer moves the drag took. The duplicated arrow's end should either stay on rectB at (650,150) or move the full drag offset with the duplicate frame to (650,450).",
+      "found_on": "dd2f8fc32b92cbf56f4abee6a0cf3b14681b4b55",
+      "last_seen": "dd2f8fc32b92cbf56f4abee6a0cf3b14681b4b55",
+      "runs": ["5e858a3d-bbcf-47c3-bbd4-81589b4e7640"],
+      "repro": ".runstory/repro/f-df5c58e9e0ac.sh",
+      "script": {
+        "run": "5e858a3d-bbcf-47c3-bbd4-81589b4e7640",
+        "path": "reproducers/hunt.c1.sh",
+        "sha256": "7cf22fca1c496c537429667cf844fe5abeb22ca304756b24edb677c37885597f",
+        "bytes": 2847
+      },
+      "location": "packages/element/src/dragElements.ts",
+      "where": [
+        {
+          "file": "packages/element/src/dragElements.ts",
+          "function": "dragSelectedElements"
+        },
+        {
+          "file": "packages/element/src/binding.ts",
+          "function": "moveFrameArrows"
+        },
+        {
+          "file": "packages/element/src/binding.ts",
+          "function": "getFrameArrowIdsToReattach"
+        }
+      ],
+      "fingerprint": {
+        "check": "hunt.c1",
+        "location": "packages/element/src/dragElements.ts",
+        "observed": "Setup: frame A (0,0,300x300) holds rectA, frame B holds rectB at x=600, and an arrow in frame A runs from rectA (100,150) to rectB (650,150). Alt-dragging frame A from (250,250) to (250,550) in one pointer move leaves the duplicate arrow's end at (650,150). The same drag done in two moves (y=400, then 550) leaves it at (650,300), and in three moves (300, 350, 550) at (650,400). The end is unbound each time. The end lags by the offset of the first move."
+      },
+      "state": "acknowledged",
+      "closed": {
+        "by": "Sean Johnson",
+        "reason": "Rejected by the person: real but minor (alt-drag copy's arrow end misses the first ~10px of the drag, DRAGGING_THRESHOLD); upstream commit, not fixing in this fork.",
+        "commit": "701b901a0f1ba3d0b390d9cdf63d112e25abac4b",
+        "at": "2026-11-10T17:36:39Z",
+        "repro_kept": "the repair script .runstory/repro/f-df5c58e9e0ac.sh was kept. an acknowledgement has no run behind it, so there is no measurement for it to agree with."
+      },
+      "earlier_commit": {
+        "reading": "passes_on_earlier",
+        "reason": null,
+        "under_test": "dd2f8fc32b92cbf56f4abee6a0cf3b14681b4b55",
+        "compared_with": "8bcdca4526867433f99fdfcb55a063668db0c9dc",
+        "range": null,
+        "measured_at": "2026-11-10T17:03:53.522Z",
+        "earlier_runs": {
+          "runs": 3,
+          "failures": 0,
+          "exits": [0, 0, 0],
+          "ms": [7879, 7115, 7027],
+          "stdout_sha256": ["10a0d57d1bcb1f17838db592e3b327e770ac62320066503b6d1dcb353779749f", "10a0d57d1bcb1f17838db592e3b327e770ac62320066503b6d1dcb353779749f", "10a0d57d1bcb1f17838db592e3b327e770ac62320066503b6d1dcb353779749f"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "duplicate arrow end after one-move drag: 650,450; after two-move drag to the same point: 650,450\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": [false, false, false],
+          "not_begun": null
+        },
+        "under_test_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [7338, 7490, 7116],
+          "stdout_sha256": ["bac4f5d313c6405db5a7f6ab6abe4a38366e403d96f7b475e7a276b84172a490", "bac4f5d313c6405db5a7f6ab6abe4a38366e403d96f7b475e7a276b84172a490", "bac4f5d313c6405db5a7f6ab6abe4a38366e403d96f7b475e7a276b84172a490"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "duplicate arrow end after one-move drag: 650,150; after two-move drag to the same point: 650,300\nDEFECT: duplicate arrow end depends on drag path (650,150 vs 650,300)\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": null,
+          "not_begun": null
+        },
+        "line": 2
+      },
+      "earlier_commit_label": "Passes on 8bcdca452686, the commit before this change (dd2f8fc32b92).",
+      "setup": "The scene is built and driven through the project's own vitest harness, which renders the real \u003cExcalidraw\u003e editor in jsdom. API.setElements places two frames with one rectangle each. The arrow is drawn with the arrow tool, and frame A is alt-dragged with simulated pointer events. The persistent browser could not be used because it has no coordinate pointer actions on the canvas. No stored data is written",
+      "sightings": [
+        {
+          "run": "5e858a3d-bbcf-47c3-bbd4-81589b4e7640",
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "commit": "dd2f8fc32b92cbf56f4abee6a0cf3b14681b4b55",
+          "candidate": "hunt.c1",
+          "claim": "Alt-dragging a frame to duplicate it puts the copied arrow's end somewhere that depends on how many pointer moves the drag took, when the arrow is bound to an element in another frame",
+          "observed": "Setup: frame A (0,0,300x300) holds rectA, frame B holds rectB at x=600, and an arrow in frame A runs from rectA (100,150) to rectB (650,150). Alt-dragging frame A from (250,250) to (250,550) in one pointer move leaves the duplicate arrow's end at (650,150). The same drag done in two moves (y=400, then 550) leaves it at (650,300), and in three moves (300, 350, 550) at (650,400). The end is unbound each time. The end lags by the offset of the first move.",
+          "severity": "medium",
+          "severity_reason": "It saves a wrong value: the duplicated arrow's unbound end is stored at a position that depends on how many pointer moves the drag took (650,150 / 650,300 / 650,400 for the same drop point).",
+          "how": "new",
+          "where": [
+            {
+              "file": "packages/element/src/dragElements.ts",
+              "function": "dragSelectedElements"
+            },
+            {
+              "file": "packages/element/src/binding.ts",
+              "function": "moveFrameArrows"
+            },
+            {
+              "file": "packages/element/src/binding.ts",
+              "function": "getFrameArrowIdsToReattach"
+            }
+          ],
+          "artifact": "reproducers/hunt.c1.sh",
+          "script": {
+            "run": "5e858a3d-bbcf-47c3-bbd4-81589b4e7640",
+            "path": "reproducers/hunt.c1.sh",
+            "sha256": "7cf22fca1c496c537429667cf844fe5abeb22ca304756b24edb677c37885597f",
+            "bytes": 2847
+          },
+          "at": "2026-11-10T17:00:55Z"
+        }
+      ],
+      "published": "b1de16fe1e3ea2bf4362dc5f8e4a98058f26381c227b677918b1974bfc5edeed"
+    },
+    {
+      "id": "f-85704e1f1182",
+      "check": "hunt.c1",
+      "oracle": "",
+      "source": "hunt",
+      "authored": "model",
+      "title": "Mermaid dialog offers no auto-fix (and only generic guidance) for a definition that opens with a multi-line %%{init}%% directive, though the same definition with a one-line directive gets both",
+      "severity": "low",
+      "observed": "With a one-line directive the dialog shows \"Syntax error near line 4. Likely causes: Unbalanced square brackets in a node label. ... Auto-fix is available\". With the directive across 3 lines (same diagram), it shows \"Syntax error near line 6. Likely causes: Unbalanced square brackets.\" and no auto-fix. getMermaidHeaderLineIndex skips only lines that start with %%, so it takes the directive's inner line as the header, and the type comes out as null. This code is unchanged by the commit, so the defect probabl",
+      "expected": "The diagram type of \"%%{init: {\\n  \\\"theme\\\":\\\"dark\\\"\\n}}%%\\nflowchart TD\\n  A --\u003e B\\n  C --\u003e D]\" is flowchart, as it is for the one-line directive, so the dialog should offer \"Auto-fix is available\" and flowchart guidance (\"Unbalanced square brackets in a node label.\"). Mermaid allows multi-line directives, and the same commit made paste detection accept them.",
+      "found_on": "7ded689cad49331167e29fd88b38f38d3736d576",
+      "last_seen": "7ded689cad49331167e29fd88b38f38d3736d576",
+      "runs": ["14acb879-4d6e-432c-ad27-27fae9077fe7"],
+      "repro": ".runstory/repro/f-85704e1f1182.sh",
+      "script": {
+        "run": "14acb879-4d6e-432c-ad27-27fae9077fe7",
+        "path": "reproducers/hunt.c1.sh",
+        "sha256": "dcb1f72c056ab27eaf6acdcf8562c59767b410519faeee7bc2f30bdd4b3bd013",
+        "bytes": 2255
+      },
+      "location": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+      "where": [
+        {
+          "file": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+          "function": "getMermaidHeaderLineIndex"
+        },
+        {
+          "file": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+          "function": "getMermaidDiagramType"
+        }
+      ],
+      "fingerprint": {
+        "check": "hunt.c1",
+        "location": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+        "observed": "With a one-line directive the dialog shows \"Syntax error near line 4. Likely causes: Unbalanced square brackets in a node label. ... Auto-fix is available\". With the directive across 3 lines (same diagram), it shows \"Syntax error near line 6. Likely causes: Unbalanced square brackets.\" and no auto-fix. getMermaidHeaderLineIndex skips only lines that start with %%, so it takes the directive's inner line as the header, and the type comes out as null. This code is unchanged by the commit, so the defect probabl"
+      },
+      "state": "open",
+      "closed": null,
+      "earlier_commit": {
+        "reading": "fails_on_earlier",
+        "reason": null,
+        "under_test": "7ded689cad49331167e29fd88b38f38d3736d576",
+        "compared_with": "dd2f8fc32b92cbf56f4abee6a0cf3b14681b4b55",
+        "range": null,
+        "measured_at": "2026-11-10T18:03:42.543Z",
+        "earlier_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [18494, 13538, 13475],
+          "stdout_sha256": ["563579ba2b4b9a8ab0eee278eaaf91d8bd2e33f4ef3879a20a39d76cdc7348d4", "563579ba2b4b9a8ab0eee278eaaf91d8bd2e33f4ef3879a20a39d76cdc7348d4", "563579ba2b4b9a8ab0eee278eaaf91d8bd2e33f4ef3879a20a39d76cdc7348d4"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "one-line directive: auto-fix offered\nDEFECT: multi-line directive: no auto-fix offered; dialog shows: \"Text to diagram AI Beta Mermaid Currently only Flowchart, Sequence, Class, and Entity Relationship Diagrams are supported. The other types will be rendered as image in Excalidraw. 1 2 3 4 5 6 %%{init: { \\\"theme\\\":\\\"dark\\\" }}%% flowchart TD A --\u003e B C --\u003e D] Syntax error near line 6. Likely causes: Unbala\"\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": [false, false, false],
+          "not_begun": null
+        },
+        "under_test_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [13278, 13193, 13341],
+          "stdout_sha256": ["cd6a1fda195fcab54458b547f6aafbc059552dc12a06c97f8166d72ef95e3ceb", "cd6a1fda195fcab54458b547f6aafbc059552dc12a06c97f8166d72ef95e3ceb", "cd6a1fda195fcab54458b547f6aafbc059552dc12a06c97f8166d72ef95e3ceb"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "one-line directive: auto-fix offered\nDEFECT: multi-line directive: no auto-fix offered; dialog shows: \"Text to diagram AI Beta Mermaid Flowcharts, Sequence, Class, State and Entity Relationship diagrams, Gantt charts, Quadrant charts and Timelines are converted to Excalidraw elements. Other types are inserted as an image. 1 2 3 4 5 6 %%{init: { \\\"theme\\\":\\\"dark\\\" }}%% flowchart TD A --\u003e B C --\u003e D] Syntax\"\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": null,
+          "not_begun": null
+        },
+        "line": 2
+      },
+      "earlier_commit_label": "Also fails on dd2f8fc32b92, the commit before this change (7ded689cad49).",
+      "setup": "No stored state is needed. The script opens the running excalidraw-app (default http://[::1]:13001) in headless Chromium through the project's Playwright, opens More tools \u003e Mermaid to Excalidraw, and types two definitions. Both have the same flowchart error. One opens with a one-line %%{init}%% directive and the other with the same directive split over three lines",
+      "sightings": [
+        {
+          "run": "14acb879-4d6e-432c-ad27-27fae9077fe7",
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "commit": "7ded689cad49331167e29fd88b38f38d3736d576",
+          "candidate": "hunt.c1",
+          "claim": "Mermaid dialog offers no auto-fix (and only generic guidance) for a definition that opens with a multi-line %%{init}%% directive, though the same definition with a one-line directive gets both",
+          "observed": "With a one-line directive the dialog shows \"Syntax error near line 4. Likely causes: Unbalanced square brackets in a node label. ... Auto-fix is available\". With the directive across 3 lines (same diagram), it shows \"Syntax error near line 6. Likely causes: Unbalanced square brackets.\" and no auto-fix. getMermaidHeaderLineIndex skips only lines that start with %%, so it takes the directive's inner line as the header, and the type comes out as null. This code is unchanged by the commit, so the defect probabl",
+          "severity": "low",
+          "severity_reason": "The dialog only shows generic guidance and leaves out the auto-fix offer for a valid multi-line directive; nothing is saved wrong, and the user can see the error and fix the bracket by hand.",
+          "how": "new",
+          "where": [
+            {
+              "file": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+              "function": "getMermaidHeaderLineIndex"
+            },
+            {
+              "file": "packages/excalidraw/components/TTDDialog/utils/mermaidError.ts",
+              "function": "getMermaidDiagramType"
+            }
+          ],
+          "artifact": "reproducers/hunt.c1.sh",
+          "script": {
+            "run": "14acb879-4d6e-432c-ad27-27fae9077fe7",
+            "path": "reproducers/hunt.c1.sh",
+            "sha256": "dcb1f72c056ab27eaf6acdcf8562c59767b410519faeee7bc2f30bdd4b3bd013",
+            "bytes": 2255
+          },
+          "at": "2026-11-10T18:00:30Z"
+        }
+      ],
+      "published": "d0814c1f320c382b0a723a722347352d90128b0e4787ff2adc3dd515b87df2a1"
+    },
+    {
+      "id": "f-e05ea0005f20",
+      "check": "hunt.c1",
+      "oracle": "",
+      "source": "hunt",
+      "authored": "model",
+      "title": "\"Bring forward\" on an element just below a frame jumps it past unrelated elements when that frame has a deleted child higher in the stack",
+      "severity": "medium",
+      "observed": "Saved order after Bring forward was childB, frameF, rectX, ellipseE. ellipseE skipped over the unrelated rectX and landed where the deleted child A had been. This happened in 4 of 4 runs. In the control (same scene, but A has frameId null before it is deleted) the order is childB, frameF, ellipseE, rectX. This is the same deleted-children-keep-frameId problem the commit fixed for insertion, but in z-index moves (getContiguousFrameRangeElements doesn't skip isDeleted). It probably predates this commit.",
+      "expected": "Once child A is deleted, frame F's group is only [childB, frameF]. Bring forward (Ctrl+]) on ellipseE, which sits just below that group, should place it directly above frameF: childB, frameF, ellipseE, rectX. A control scene where A is not a frame child gives exactly that order.",
+      "found_on": "8bcdca4526867433f99fdfcb55a063668db0c9dc",
+      "last_seen": "8bcdca4526867433f99fdfcb55a063668db0c9dc",
+      "runs": ["5c57aa66-bfd3-4d1f-9371-e6a1495a3bbf"],
+      "repro": ".runstory/repro/f-e05ea0005f20.sh",
+      "script": {
+        "run": "5c57aa66-bfd3-4d1f-9371-e6a1495a3bbf",
+        "path": "reproducers/hunt.c1.sh",
+        "sha256": "457c2ce6d032efe411a0b00d0cf714ec89f194404263f24cb4223f290cd02c0f",
+        "bytes": 6262
+      },
+      "location": "packages/element/src/zindex.ts",
+      "where": [
+        {
+          "file": "packages/element/src/zindex.ts",
+          "function": "getContiguousFrameRangeElements"
+        },
+        {
+          "file": "packages/element/src/zindex.ts",
+          "function": "isOfTargetFrame"
+        }
+      ],
+      "fingerprint": {
+        "check": "hunt.c1",
+        "location": "packages/element/src/zindex.ts",
+        "observed": "Saved order after Bring forward was childB, frameF, rectX, ellipseE. ellipseE skipped over the unrelated rectX and landed where the deleted child A had been. This happened in 4 of 4 runs. In the control (same scene, but A has frameId null before it is deleted) the order is childB, frameF, ellipseE, rectX. This is the same deleted-children-keep-frameId problem the commit fixed for insertion, but in z-index moves (getContiguousFrameRangeElements doesn't skip isDeleted). It probably predates this commit."
+      },
+      "state": "open",
+      "closed": null,
+      "earlier_commit": {
+        "reading": "fails_on_earlier",
+        "reason": null,
+        "under_test": "8bcdca4526867433f99fdfcb55a063668db0c9dc",
+        "compared_with": "2610ebae0cbd26d8148e70f6144cacbb81e8b156",
+        "range": null,
+        "measured_at": "2026-11-10T18:14:54.523Z",
+        "earlier_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [15580, 10155, 9963],
+          "stdout_sha256": ["ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b", "ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b", "ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "order after bring forward of ellipseE: childB, frameF, rectX, ellipseE\nDEFECT: Bring forward moved ellipseE above unrelated rectX (deleted frame child counted in frame range)\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": [false, false, false],
+          "not_begun": null
+        },
+        "under_test_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [9627, 9617, 9340],
+          "stdout_sha256": ["ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b", "ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b", "ad29d8a755170987850cc799729903f97708a0c2965ac9eb947628f64820286b"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "order after bring forward of ellipseE: childB, frameF, rectX, ellipseE\nDEFECT: Bring forward moved ellipseE above unrelated rectX (deleted frame child counted in frame range)\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": null,
+          "not_begun": null
+        },
+        "line": 2
+      },
+      "earlier_commit_label": "Also fails on 2610ebae0cbd, the commit before this change (8bcdca452686).",
+      "setup": "A .excalidraw scene is dropped onto the canvas through the app's own file drag-and-drop import. In that legacy (denormalized) order, frame child childA sits above the frame and above an unrelated rectX. ellipseE is at the bottom. The script clicks childA, deletes it with the Delete key, clicks ellipseE and presses Ctrl+], then reads the order from the app's saved local scene (localStorage \"excalidraw\"). Headless Playwright Chromium, from the project's node_modules",
+      "sightings": [
+        {
+          "run": "5c57aa66-bfd3-4d1f-9371-e6a1495a3bbf",
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "commit": "8bcdca4526867433f99fdfcb55a063668db0c9dc",
+          "candidate": "hunt.c1",
+          "claim": "\"Bring forward\" on an element just below a frame jumps it past unrelated elements when that frame has a deleted child higher in the stack",
+          "observed": "Saved order after Bring forward was childB, frameF, rectX, ellipseE. ellipseE skipped over the unrelated rectX and landed where the deleted child A had been. This happened in 4 of 4 runs. In the control (same scene, but A has frameId null before it is deleted) the order is childB, frameF, ellipseE, rectX. This is the same deleted-children-keep-frameId problem the commit fixed for insertion, but in z-index moves (getContiguousFrameRangeElements doesn't skip isDeleted). It probably predates this commit.",
+          "severity": "medium",
+          "severity_reason": "It saves a wrong value: after Bring forward, the stack order written to the local scene puts ellipseE above unrelated rectX, though the user can see this and undo it.",
+          "how": "new",
+          "where": [
+            {
+              "file": "packages/element/src/zindex.ts",
+              "function": "getContiguousFrameRangeElements"
+            },
+            {
+              "file": "packages/element/src/zindex.ts",
+              "function": "isOfTargetFrame"
+            }
+          ],
+          "artifact": "reproducers/hunt.c1.sh",
+          "script": {
+            "run": "5c57aa66-bfd3-4d1f-9371-e6a1495a3bbf",
+            "path": "reproducers/hunt.c1.sh",
+            "sha256": "457c2ce6d032efe411a0b00d0cf714ec89f194404263f24cb4223f290cd02c0f",
+            "bytes": 6262
+          },
+          "at": "2026-11-10T18:12:38Z"
+        }
+      ],
+      "published": "bb1d054b4bdce4371377c5e4735eb1c78910575f68e8a5d5e395f25d22682c04"
+    },
+    {
+      "id": "f-7518a9b7926b",
+      "check": "hunt.c1",
+      "oracle": "",
+      "source": "hunt",
+      "authored": "model",
+      "title": "Alt+arrow flowchart navigation selects a locked node, so Delete (or other edits) then removes the locked element",
+      "severity": "medium",
+      "observed": "Scene: A at (0,0), locked B at (300,0) in A's row, C at (0,300), elbow arrows A→C→B (B is not linked to A directly). With A selected, Alt+ArrowRight made selectedElementIds = {lockedB}. Delete then set lockedB.isDeleted=true. 3 of 3 runs. A locked node linked directly to A behaves the same way (seen once while exploring); the old code also followed direct links. Reaching an unlinked node in the same row is new with this commit's visual navigation.",
+      "expected": "Locked elements can't be selected, the same as with clicking or Ctrl+A. Alt+arrow should skip a locked node or do nothing, and pressing Delete should leave the locked element in place.",
+      "found_on": "2610ebae0cbd26d8148e70f6144cacbb81e8b156",
+      "last_seen": "2610ebae0cbd26d8148e70f6144cacbb81e8b156",
+      "runs": ["048aaf6e-8076-4758-9e89-c6045609b26a"],
+      "repro": ".runstory/repro/f-7518a9b7926b.sh",
+      "script": {
+        "run": "048aaf6e-8076-4758-9e89-c6045609b26a",
+        "path": "reproducers/hunt.c1.sh",
+        "sha256": "9736abd011c1d345e50373cf0d8df8d8d22bcee73285c2899a80aea05717e9fe",
+        "bytes": 3364
+      },
+      "location": "packages/element/src/flowchart.ts",
+      "where": [
+        {
+          "file": "packages/element/src/flowchart.ts",
+          "function": "findNodeInDirection"
+        },
+        {
+          "file": "packages/element/src/flowchart.ts",
+          "function": "getConnectedFlowchartNodes"
+        },
+        {
+          "file": "packages/excalidraw/components/App.flowchart.ts",
+          "function": "selectAndReveal"
+        }
+      ],
+      "fingerprint": {
+        "check": "hunt.c1",
+        "location": "packages/element/src/flowchart.ts",
+        "observed": "Scene: A at (0,0), locked B at (300,0) in A's row, C at (0,300), elbow arrows A→C→B (B is not linked to A directly). With A selected, Alt+ArrowRight made selectedElementIds = {lockedB}. Delete then set lockedB.isDeleted=true. 3 of 3 runs. A locked node linked directly to A behaves the same way (seen once while exploring); the old code also followed direct links. Reaching an unlinked node in the same row is new with this commit's visual navigation."
+      },
+      "state": "open",
+      "closed": null,
+      "earlier_commit": {
+        "reading": "passes_on_earlier",
+        "reason": null,
+        "under_test": "2610ebae0cbd26d8148e70f6144cacbb81e8b156",
+        "compared_with": "a758e93d6a03e9f995973703cb886850a398a6d3",
+        "range": null,
+        "measured_at": "2026-11-10T18:26:02.336Z",
+        "earlier_runs": {
+          "runs": 3,
+          "failures": 0,
+          "exits": [0, 0, 0],
+          "ms": [9538, 3276, 3142],
+          "stdout_sha256": ["541055d9241a407a3fcd31c69d3eb38898e1b5d5bc97753386d69ff2b5f8de53", "541055d9241a407a3fcd31c69d3eb38898e1b5d5bc97753386d69ff2b5f8de53", "541055d9241a407a3fcd31c69d3eb38898e1b5d5bc97753386d69ff2b5f8de53"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "selected after Alt+ArrowRight from A: nodeC | locked B deleted after Delete: false\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": [false, false, false],
+          "not_begun": null
+        },
+        "under_test_runs": {
+          "runs": 3,
+          "failures": 3,
+          "exits": [1, 1, 1],
+          "ms": [2474, 2512, 2758],
+          "stdout_sha256": ["3934fcd30b588ff8aa828312b25009a09c2e385d2a5ac08a800e5c48ea2372bd", "3934fcd30b588ff8aa828312b25009a09c2e385d2a5ac08a800e5c48ea2372bd", "3934fcd30b588ff8aa828312b25009a09c2e385d2a5ac08a800e5c48ea2372bd"],
+          "stderr_sha256": ["e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"],
+          "could_not_run": 0,
+          "output_tail": "selected after Alt+ArrowRight from A: lockedB | locked B deleted after Delete: true\nDEFECT: Alt+arrow navigation selects a locked flowchart node and Delete removes it\n",
+          "ended": ["exited", "exited", "exited"],
+          "outside_program": null,
+          "not_begun": null
+        },
+        "line": 2
+      },
+      "earlier_commit_label": "Passes on a758e93d6a03, the commit before this change (2610ebae0cbd).",
+      "setup": "The scene (three rectangles, one with locked:true, and two bound elbow arrows) is seeded into the app's own local-storage scene key before the page loads, the same as a saved drawing being restored. Node A is selected through the dev-mode window.h test hook, because a headless script can't reliably click a canvas shape. Alt+ArrowRight and Delete are real keyboard events",
+      "sightings": [
+        {
+          "run": "048aaf6e-8076-4758-9e89-c6045609b26a",
+          "provider": "anthropic",
+          "model": "claude-opus-5-5",
+          "commit": "2610ebae0cbd26d8148e70f6144cacbb81e8b156",
+          "candidate": "hunt.c1",
+          "claim": "Alt+arrow flowchart navigation selects a locked node, so Delete (or other edits) then removes the locked element",
+          "observed": "Scene: A at (0,0), locked B at (300,0) in A's row, C at (0,300), elbow arrows A→C→B (B is not linked to A directly). With A selected, Alt+ArrowRight made selectedElementIds = {lockedB}. Delete then set lockedB.isDeleted=true. 3 of 3 runs. A locked node linked directly to A behaves the same way (seen once while exploring); the old code also followed direct links. Reaching an unlinked node in the same row is new with this commit's visual navigation.",
+          "severity": "medium",
+          "severity_reason": "Alt+arrow selects a locked node and Delete then removes it, saving a wrong state that locking should prevent; Ctrl+Z can undo it, so this is medium rather than high.",
+          "how": "new",
+          "where": [
+            {
+              "file": "packages/element/src/flowchart.ts",
+              "function": "findNodeInDirection"
+            },
+            {
+              "file": "packages/element/src/flowchart.ts",
+              "function": "getConnectedFlowchartNodes"
+            },
+            {
+              "file": "packages/excalidraw/components/App.flowchart.ts",
+              "function": "selectAndReveal"
+            }
+          ],
+          "artifact": "reproducers/hunt.c1.sh",
+          "script": {
+            "run": "048aaf6e-8076-4758-9e89-c6045609b26a",
+            "path": "reproducers/hunt.c1.sh",
+            "sha256": "9736abd011c1d345e50373cf0d8df8d8d22bcee73285c2899a80aea05717e9fe",
+            "bytes": 3364
+          },
+          "at": "2026-11-10T18:24:03Z"
+        }
+      ],
+      "published": "4a2e3ac387e9992b62a0d854b4d4e6dfca66022800d7f2008301198cd88e729c"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "runstory hook stop --agent codex",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  }
+}

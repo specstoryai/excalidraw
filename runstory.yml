@@ -1,0 +1,5 @@
+# runstory.yml holds the settings a person chose. runstory setup --plan shows the rest.
+
+app: .
+env:
+  BROWSER: none # setup agent c-2d837802: excalidraw-app/vite.config.mts:150 enables browser launch; BROWSER=none prevents Vite from spawning
