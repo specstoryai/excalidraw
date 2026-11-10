@@ -536,6 +536,12 @@ export class FlowChartNavigator {
 
     const candidates = getConnectedFlowchartNodes(node, elementsMap).flatMap(
       (candidate) => {
+        // a locked node can't be selected, so navigation mustn't select it
+        // either (it could then be edited or deleted)
+        if (candidate.locked) {
+          return [];
+        }
+
         const bounds = aabbForElement(candidate, elementsMap);
         const [mainStart, mainEnd, crossStart, crossEnd] = horizontal
           ? [bounds[0], bounds[2], bounds[1], bounds[3]]

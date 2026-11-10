@@ -818,4 +818,40 @@ describe("flow chart navigation", () => {
     navigate(KEYS.ARROW_DOWN);
     expectSelected(b);
   });
+
+  it("never moves to a locked node", () => {
+    /**
+     * A   [B] (locked)
+     * ↓    ↑
+     * C ───┘
+     */
+    const a = node(0, 0);
+    const lockedB = API.createElement({
+      type: "rectangle",
+      x: 300,
+      y: 0,
+      width: 200,
+      height: 80,
+      locked: true,
+    });
+    const c = node(0, 300);
+    API.setElements([a, lockedB, c, link(a, c), link(c, lockedB)]);
+
+    // B is in A's row but locked: there's nothing else to the right
+    API.setSelectedElements([a]);
+    navigate(KEYS.ARROW_RIGHT);
+    expectSelected(a);
+
+    // nor when A links to B directly
+    API.setElements([a, lockedB, c, link(a, lockedB), link(a, c)]);
+    API.setSelectedElements([a]);
+    navigate(KEYS.ARROW_RIGHT);
+    expectSelected(a);
+
+    // so Delete can't reach it
+    Keyboard.keyPress(KEYS.DELETE);
+    expect(
+      h.elements.find((element) => element.id === lockedB.id)?.isDeleted,
+    ).toBe(false);
+  });
 });
